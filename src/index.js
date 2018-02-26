@@ -36,8 +36,19 @@ class SmartCalculator {
     if(matchesArray !== null){
       for(var i = 0; i < matchesArray.length; i++){
         var currentRow = matchesArray[i].split('^').map((x) => (Number(x)));
-        var replacement = "Math.pow("+currentRow[0]+","+currentRow.slice(1).reduce((p, x)=>(p*x))+")";
-        str = str.replace(matchesArray[i], replacement);
+        var strRow = "";
+        if(currentRow.length == 2 ){
+          strRow = "Math.pow("+currentRow[0]+","+currentRow[1]+")";
+        } else {
+          strRow = "Math.pow(" + currentRow[0];
+          var brackets = ")";
+          for(var j = 1; j < currentRow.length - 1; j++){
+            strRow += " , Math.pow(" + currentRow[j];
+            brackets += ")";
+          }
+          strRow += "," + currentRow[currentRow.length - 1] + brackets
+        }
+        str = str.replace(matchesArray[i], strRow);
       }
     }
     return Number(eval(str)); // Delete Number in case of error
